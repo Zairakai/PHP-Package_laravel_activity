@@ -1,0 +1,31 @@
+parameters:
+	ignoreErrors:
+		-
+			message: '#^Call to an undefined method Illuminate\\Database\\Eloquent\\Builder\|Spatie\\Activitylog\\Models\\Activity\:\:where\(\)\.$#'
+			identifier: method.notFound
+			count: 2
+			path: ../../src/Support/ActivityQueryFluent.php
+
+		-
+			message: '#^Method Zairakai\\LaravelActivity\\Support\\ActivityQueryFluent\:\:all\(\) should return Illuminate\\Database\\Eloquent\\Builder\<Spatie\\Activitylog\\Models\\Activity\> but returns Illuminate\\Database\\Query\\Builder\.$#'
+			identifier: return.type
+			count: 1
+			path: ../../src/Support/ActivityQueryFluent.php
+
+		-
+			message: '#^Parameter \#1 \$ids of static method Zairakai\\LaravelActivity\\Support\\PivotIdNormalizer\:\:normalize\(\) expects array\<int\|string\>\|Illuminate\\Database\\Eloquent\\Model\|Illuminate\\Support\\Collection\<int, Illuminate\\Database\\Eloquent\\Model\>\|int\|string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: ../../src/Support/PivotActivityFluent.php
+
+		-
+			message: '#^Method Zairakai\\LaravelActivity\\Support\\PivotIdNormalizer\:\:normalize\(\) should return array\<int, int\|string\> but returns array\<Illuminate\\Database\\Eloquent\\Model\|int\|string\>\.$#'
+			identifier: return.type
+			count: 1
+			path: ../../src/Support/PivotIdNormalizer.php
+
+		-
+			message: '#^Trait Zairakai\\LaravelActivity\\Traits\\TraceActivities is used zero times and is not analysed\.$#'
+			identifier: trait.unused
+			count: 1
+			path: ../../src/Traits/TraceActivities.php

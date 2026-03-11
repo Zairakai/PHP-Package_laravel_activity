@@ -1,0 +1,136 @@
+{
+    "name": "zairakai/laravel-activity",
+    "description": "Enhanced activity logging helpers for Spatie Laravel Activity Log with pivot table support",
+    "license": "MIT",
+    "type": "library",
+    "keywords": [
+        "laravel",
+        "activity",
+        "logging",
+        "spatie",
+        "pivot",
+        "audit",
+        "zairakai"
+    ],
+    "authors": [
+        {
+            "name": "Stanislas Poisson",
+            "email": "stanislas.p@the-white-rabbits.fr",
+            "homepage": "https://gitlab.com/zairakai",
+            "role": "Maintainer"
+        }
+    ],
+    "homepage": "https://gitlab.com/zairakai/php-packages/laravel-activity",
+    "support": {
+        "issues": "https://gitlab.com/zairakai/php-packages/laravel-activity/-/issues",
+        "source": "https://gitlab.com/zairakai/php-packages/laravel-activity",
+        "docs": "https://gitlab.com/zairakai/php-packages/laravel-activity/-/blob/main/README.md"
+    },
+    "funding": [
+        {
+            "type": "patreon",
+            "url": "https://www.patreon.com/c/zairakai"
+        },
+        {
+            "type": "other",
+            "url": "https://www.twitch.tv/zairakai"
+        }
+    ],
+    "require": {
+        "php": "^8.3",
+        "illuminate/contracts": "^11.0 || ^12.0",
+        "illuminate/database": "^11.0 || ^12.0",
+        "illuminate/support": "^11.0 || ^12.0",
+        "spatie/laravel-activitylog": "^4.8"
+    },
+    "require-dev": {
+        "driftingly/rector-laravel": "^2.1",
+        "ergebnis/composer-normalize": "^2.49",
+        "larastan/larastan": "^3.9",
+        "laravel/pint": "^1.27",
+        "nunomaduro/phpinsights": "^2.13",
+        "orchestra/testbench": "^9.0 || ^10.0",
+        "phpmetrics/phpmetrics": "^2.9",
+        "phpstan/phpstan": "^2.1",
+        "phpunit/phpunit": "^12.0",
+        "rector/rector": "^2.3",
+        "zairakai/laravel-dev-tools": "^1.0"
+    },
+    "suggest": {
+        "ergebnis/composer-normalize": "Automated composer.json normalization"
+    },
+    "minimum-stability": "stable",
+    "prefer-stable": true,
+    "autoload": {
+        "psr-4": {
+            "Zairakai\\LaravelActivity\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Zairakai\\LaravelActivity\\Tests\\": "tests/"
+        }
+    },
+    "config": {
+        "allow-plugins": {
+            "dealerdirect/phpcodesniffer-composer-installer": true,
+            "ergebnis/composer-normalize": true,
+            "zairakai/laravel-dev-tools": true
+        },
+        "optimize-autoloader": true,
+        "platform": {
+            "php": "8.3"
+        },
+        "preferred-install": "dist",
+        "sort-packages": true
+    },
+    "extra": {
+        "authors": [
+            {
+                "email": [
+                    "stanislas.p@the-white-rabbits.fr"
+                ],
+                "name": "Stanislas Poisson",
+                "notes": "Primary maintainer",
+                "social": {
+                    "github": "https://github.com/Stanislas-Poisson",
+                    "gitlab": "https://gitlab.com/zairakai",
+                    "linkedin": "https://www.linkedin.com/in/stanislasp/",
+                    "stanislas-poisson": "https://the-white-rabbits.fr",
+                    "the-white-rabbits": "https://the-white-rabbits.fr",
+                    "twitch": "https://twitch.tv/zairakai"
+                }
+            }
+        ],
+        "laravel": {
+            "providers": [
+                "Zairakai\\LaravelActivity\\LaravelActivityServiceProvider"
+            ]
+        }
+    },
+    "scripts": {
+        "post-install-cmd": [
+            "@setup-dev-tools"
+        ],
+        "post-update-cmd": [
+            "@setup-dev-tools"
+        ],
+        "analyse": "bash vendor/zairakai/laravel-dev-tools/scripts/phpstan.sh",
+        "analyse:baseline": "GENERATE_BASELINE=true bash vendor/zairakai/laravel-dev-tools/scripts/phpstan.sh",
+        "cs": "bash vendor/zairakai/laravel-dev-tools/scripts/cs-check.sh",
+        "cs-fix": "bash vendor/zairakai/laravel-dev-tools/scripts/cs-fix.sh",
+        "insights": "bash vendor/zairakai/laravel-dev-tools/scripts/insights.sh",
+        "insights:fix": "bash vendor/zairakai/laravel-dev-tools/scripts/insights.sh --fix",
+        "markdown": "bash vendor/zairakai/laravel-dev-tools/scripts/markdownlint.sh",
+        "markdown:fix": "bash vendor/zairakai/laravel-dev-tools/scripts/markdownlint.sh --fix",
+        "phpmetrics": "bash vendor/zairakai/laravel-dev-tools/scripts/phpmetrics.sh",
+        "quality": "bash vendor/zairakai/laravel-dev-tools/scripts/ci-quality.sh",
+        "quality-fast": "bash vendor/zairakai/laravel-dev-tools/scripts/ci-quality.sh",
+        "rector": "bash vendor/zairakai/laravel-dev-tools/scripts/rector-check.sh",
+        "rector:fix": "bash vendor/zairakai/laravel-dev-tools/scripts/rector-fix.sh",
+        "setup-dev-tools": "bash vendor/zairakai/laravel-dev-tools/scripts/setup-package.sh --silent",
+        "test": "bash vendor/zairakai/laravel-dev-tools/scripts/test.sh",
+        "test:coverage": "COVERAGE=true bash vendor/zairakai/laravel-dev-tools/scripts/test.sh",
+        "test:unit": "TESTSUITE=Unit bash vendor/zairakai/laravel-dev-tools/scripts/test.sh"
+    }
+}
