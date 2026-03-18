@@ -11,7 +11,7 @@
 
 include:
   - project: "zairakai/php-packages/laravel-dev-tools"
-    ref: v1.0.0
+    ref: v1.2.0
     file: '.gitlab/ci/pipeline-php-package.yml'
 
 variables:
