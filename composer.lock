@@ -1397,16 +1397,16 @@
         },
         {
             "name": "league/commonmark",
-            "version": "2.8.1",
+            "version": "2.8.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/thephpleague/commonmark.git",
-                "reference": "84b1ca48347efdbe775426f108622a42735a6579"
+                "reference": "59fb075d2101740c337c7216e3f32b36c204218b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/thephpleague/commonmark/zipball/84b1ca48347efdbe775426f108622a42735a6579",
-                "reference": "84b1ca48347efdbe775426f108622a42735a6579",
+                "url": "https://api.github.com/repos/thephpleague/commonmark/zipball/59fb075d2101740c337c7216e3f32b36c204218b",
+                "reference": "59fb075d2101740c337c7216e3f32b36c204218b",
                 "shasum": ""
             },
             "require": {
@@ -1500,7 +1500,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2026-03-05T21:37:03+00:00"
+            "time": "2026-03-19T13:16:38+00:00"
         },
         {
             "name": "league/config",
@@ -12265,16 +12265,16 @@
         },
         {
             "name": "zairakai/laravel-dev-tools",
-            "version": "v1.2.0",
+            "version": "v1.3.0",
             "source": {
                 "type": "git",
                 "url": "https://gitlab.com/zairakai/php-packages/laravel-dev-tools.git",
-                "reference": "a8bb7767b9d31d5d9eee85035fd3c86c58d516c5"
+                "reference": "67a2ff5d1264c4f2d7758a2b1b12d508d3211d05"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://gitlab.com/api/v4/projects/zairakai%2Fphp-packages%2Flaravel-dev-tools/repository/archive.zip?sha=a8bb7767b9d31d5d9eee85035fd3c86c58d516c5",
-                "reference": "a8bb7767b9d31d5d9eee85035fd3c86c58d516c5",
+                "url": "https://gitlab.com/api/v4/projects/zairakai%2Fphp-packages%2Flaravel-dev-tools/repository/archive.zip?sha=67a2ff5d1264c4f2d7758a2b1b12d508d3211d05",
+                "reference": "67a2ff5d1264c4f2d7758a2b1b12d508d3211d05",
                 "shasum": ""
             },
             "require": {
@@ -12376,7 +12376,7 @@
                     "type": "patreon"
                 }
             ],
-            "time": "2026-03-18T15:59:37+00:00"
+            "time": "2026-03-19T10:22:22+00:00"
         }
     ],
     "aliases": [],
