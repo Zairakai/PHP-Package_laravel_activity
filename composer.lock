@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "40d2a98e3e84d81ba642516829d18970",
+    "content-hash": "65480635fd14530843dc4d94483dbc27",
     "packages": [
         {
             "name": "brick/math",
@@ -12205,16 +12205,16 @@
         },
         {
             "name": "zairakai/laravel-dev-tools",
-            "version": "v1.3.1",
+            "version": "v2.0.0",
             "source": {
                 "type": "git",
                 "url": "https://gitlab.com/zairakai/php-packages/laravel-dev-tools.git",
-                "reference": "69ddb6f2e14ed0e23d2aea6f81b727f0a74766ac"
+                "reference": "90ce2ab1cd87cbf195298d93f376523525c6b5a4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://gitlab.com/api/v4/projects/zairakai%2Fphp-packages%2Flaravel-dev-tools/repository/archive.zip?sha=69ddb6f2e14ed0e23d2aea6f81b727f0a74766ac",
-                "reference": "69ddb6f2e14ed0e23d2aea6f81b727f0a74766ac",
+                "url": "https://gitlab.com/api/v4/projects/zairakai%2Fphp-packages%2Flaravel-dev-tools/repository/archive.zip?sha=90ce2ab1cd87cbf195298d93f376523525c6b5a4",
+                "reference": "90ce2ab1cd87cbf195298d93f376523525c6b5a4",
                 "shasum": ""
             },
             "require": {
@@ -12223,7 +12223,7 @@
                 "larastan/larastan": "^2.0 || ^3.0",
                 "laravel/pint": "^1.13",
                 "nunomaduro/phpinsights": "^2.11",
-                "php": "^8.3",
+                "php": "^8.4",
                 "phpmetrics/phpmetrics": "^2.8",
                 "phpstan/phpstan": "^1.10 || ^2.0",
                 "rector/rector": "^1.0 || ^2.0"
@@ -12231,11 +12231,11 @@
             "require-dev": {
                 "composer/composer": "^2.0",
                 "ergebnis/composer-normalize": "^2.48",
-                "illuminate/console": "^11.0 || ^12.0",
-                "illuminate/database": "^11.0 || ^12.0",
-                "illuminate/filesystem": "^11.0 || ^12.0",
-                "illuminate/support": "^11.0 || ^12.0",
-                "orchestra/testbench": "^9.0 || ^10.0",
+                "illuminate/console": "^12.0 || ^13.0",
+                "illuminate/database": "^12.0 || ^13.0",
+                "illuminate/filesystem": "^12.0 || ^13.0",
+                "illuminate/support": "^12.0 || ^13.0",
+                "orchestra/testbench": "^10.0 || ^11.0",
                 "phpunit/phpunit": "^12.0"
             },
             "suggest": {
@@ -12316,7 +12316,7 @@
                     "type": "patreon"
                 }
             ],
-            "time": "2026-03-19T23:37:51+00:00"
+            "time": "2026-03-30T23:20:31+00:00"
         }
     ],
     "aliases": [],

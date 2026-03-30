@@ -54,7 +54,7 @@
         "phpstan/phpstan": "^2.1",
         "phpunit/phpunit": "^12.0",
         "rector/rector": "^2.3",
-        "zairakai/laravel-dev-tools": "^1.0"
+        "zairakai/laravel-dev-tools": "^2.0"
     },
     "suggest": {
         "ergebnis/composer-normalize": "Automated composer.json normalization"
