@@ -12205,16 +12205,16 @@
         },
         {
             "name": "zairakai/laravel-dev-tools",
-            "version": "v2.0.0",
+            "version": "v2.0.1",
             "source": {
                 "type": "git",
                 "url": "https://gitlab.com/zairakai/php-packages/laravel-dev-tools.git",
-                "reference": "90ce2ab1cd87cbf195298d93f376523525c6b5a4"
+                "reference": "90613d20be2f331b63eb620e28d93d130d5a2374"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://gitlab.com/api/v4/projects/zairakai%2Fphp-packages%2Flaravel-dev-tools/repository/archive.zip?sha=90ce2ab1cd87cbf195298d93f376523525c6b5a4",
-                "reference": "90ce2ab1cd87cbf195298d93f376523525c6b5a4",
+                "url": "https://gitlab.com/api/v4/projects/zairakai%2Fphp-packages%2Flaravel-dev-tools/repository/archive.zip?sha=90613d20be2f331b63eb620e28d93d130d5a2374",
+                "reference": "90613d20be2f331b63eb620e28d93d130d5a2374",
                 "shasum": ""
             },
             "require": {
@@ -12316,7 +12316,7 @@
                     "type": "patreon"
                 }
             ],
-            "time": "2026-03-30T23:20:31+00:00"
+            "time": "2026-03-31T19:38:52+00:00"
         }
     ],
     "aliases": [],
