@@ -1,26 +1,20 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Zairakai\LaravelActivity\Tests;
 
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 use Orchestra\Testbench\TestCase as Orchestra;
 use Spatie\Activitylog\ActivitylogServiceProvider;
 use Zairakai\LaravelActivity\LaravelActivityServiceProvider;
 
 class TestCase extends Orchestra
 {
-    protected function setUp(): void
+    protected function defineDatabaseMigrations(): void
     {
-        parent::setUp();
-
-        $this->loadLaravelMigrations();
-        $this->createActivityLogTable();
-        $this->artisan('migrate', ['--database' => 'testing']);
-    }
-
-    protected function createActivityLogTable(): void
-    {
-        resolve('db')->connection('testing')->getSchemaBuilder()->create('activity_log', function (Blueprint $blueprint): void {
+        Schema::connection('testing')->create('activity_log', function (Blueprint $blueprint): void {
             $blueprint->bigIncrements('id');
             $blueprint->string('log_name')->nullable();
             $blueprint->text('description');
@@ -54,5 +48,10 @@ class TestCase extends Orchestra
             LaravelActivityServiceProvider::class,
             ActivitylogServiceProvider::class,
         ];
+    }
+
+    protected function rollbackDatabaseMigrations(): void
+    {
+        Schema::connection('testing')->dropIfExists('activity_log');
     }
 }
