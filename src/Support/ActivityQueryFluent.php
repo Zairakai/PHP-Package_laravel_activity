@@ -10,36 +10,40 @@ use Spatie\Activitylog\Models\Activity;
 
 /**
  * Fluent API for querying activities.
+ *
+ * @template TActivity of Activity
  */
 class ActivityQueryFluent
 {
+    /**
+     * @param class-string<TActivity> $activityClass
+     */
     public function __construct(
-        protected Model $model,
+        protected readonly Model $model,
+        protected readonly string $activityClass,
     ) {}
 
     /**
      * Get all activities (caused by + performed on).
      *
-     * @return Builder<Activity>
+     * @return Builder<TActivity>
      */
     public function all(): Builder
     {
         $by = $this->by();
-        $on = $this->on();
+        $by->union($this->on());
 
-        return $by->union($on);
+        return $by;
     }
 
     /**
      * Get activities caused by this model.
      *
-     * @return Builder<Activity>
+     * @return Builder<TActivity>
      */
     public function by(): Builder
     {
-        $query = Activity::query();
-
-        return $query
+        return $this->activityClass::query()
             ->where('causer_type', $this->model::class)
             ->where('causer_id', $this->model->getKey());
     }
@@ -47,13 +51,11 @@ class ActivityQueryFluent
     /**
      * Get activities performed on this model.
      *
-     * @return Builder<Activity>
+     * @return Builder<TActivity>
      */
     public function on(): Builder
     {
-        $query = Activity::query();
-
-        return $query
+        return $this->activityClass::query()
             ->where('subject_type', $this->model::class)
             ->where('subject_id', $this->model->getKey());
     }
