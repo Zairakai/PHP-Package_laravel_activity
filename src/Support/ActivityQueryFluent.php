@@ -31,9 +31,9 @@ class ActivityQueryFluent
     public function all(): Builder
     {
         $by = $this->by();
-        $on = $this->on();
+        $by->union($this->on());
 
-        return $by->union($on);
+        return $by;
     }
 
     /**
