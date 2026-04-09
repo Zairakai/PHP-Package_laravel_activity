@@ -9,9 +9,9 @@ use Illuminate\Database\Eloquent\Model;
 use PHPUnit\Framework\Attributes\Test;
 use Spatie\Activitylog\Models\Activity;
 use Zairakai\LaravelActivity\Support\ActivityQueryFluent;
-use Zairakai\LaravelActivity\Tests\TestCase;
+use Zairakai\LaravelActivity\Tests\UnitTestCase;
 
-final class ActivityQueryFluentTest extends TestCase
+final class ActivityQueryFluentTest extends UnitTestCase
 {
     private ActivityQueryFluent $activityQueryFluent;
 
@@ -24,7 +24,7 @@ final class ActivityQueryFluentTest extends TestCase
         $this->testModel     = new TestModel;
         $this->testModel->id = 123;
 
-        $this->activityQueryFluent = new ActivityQueryFluent($this->testModel);
+        $this->activityQueryFluent = new ActivityQueryFluent($this->testModel, Activity::class);
     }
 
     #[Test]
@@ -82,6 +82,15 @@ final class ActivityQueryFluentTest extends TestCase
         $this->assertInstanceOf(Activity::class, $builder->getModel());
         $this->assertInstanceOf(Activity::class, $onQuery->getModel());
     }
+
+    #[Test]
+    public function it_uses_injected_activity_class_instead_of_base_activity(): void
+    {
+        $activityQueryFluent = new ActivityQueryFluent($this->testModel, CustomActivity::class);
+
+        $this->assertInstanceOf(CustomActivity::class, $activityQueryFluent->by()->getModel());
+        $this->assertInstanceOf(CustomActivity::class, $activityQueryFluent->on()->getModel());
+    }
 }
 
 /**
@@ -94,4 +103,12 @@ class TestModel extends Model
     protected $guarded = [];
 
     protected $table = 'test_models';
+}
+
+/**
+ * Custom activity model stub for injection tests.
+ */
+class CustomActivity extends Activity
+{
+    protected $table = 'activity_log';
 }
