@@ -24,7 +24,7 @@ final class ActivityQueryFluentTest extends TestCase
         $this->testModel     = new TestModel;
         $this->testModel->id = 123;
 
-        $this->activityQueryFluent = new ActivityQueryFluent($this->testModel);
+        $this->activityQueryFluent = new ActivityQueryFluent($this->testModel, Activity::class);
     }
 
     #[Test]
@@ -82,6 +82,15 @@ final class ActivityQueryFluentTest extends TestCase
         $this->assertInstanceOf(Activity::class, $builder->getModel());
         $this->assertInstanceOf(Activity::class, $onQuery->getModel());
     }
+
+    #[Test]
+    public function it_uses_injected_activity_class_instead_of_base_activity(): void
+    {
+        $fluent = new ActivityQueryFluent($this->testModel, CustomActivity::class);
+
+        $this->assertInstanceOf(CustomActivity::class, $fluent->by()->getModel());
+        $this->assertInstanceOf(CustomActivity::class, $fluent->on()->getModel());
+    }
 }
 
 /**
@@ -94,4 +103,12 @@ class TestModel extends Model
     protected $guarded = [];
 
     protected $table = 'test_models';
+}
+
+/**
+ * Custom activity model stub for injection tests.
+ */
+class CustomActivity extends Activity
+{
+    protected $table = 'activity_log';
 }
