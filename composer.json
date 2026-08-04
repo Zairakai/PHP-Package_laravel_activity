@@ -41,7 +41,7 @@
         "illuminate/contracts": "^12.0 || ^13.0",
         "illuminate/database": "^12.0 || ^13.0",
         "illuminate/support": "^12.0 || ^13.0",
-        "spatie/laravel-activitylog": "^4.8"
+        "spatie/laravel-activitylog": "^5.0"
     },
     "require-dev": {
         "driftingly/rector-laravel": "^2.1",
