@@ -19,9 +19,10 @@ class TestCase extends Orchestra
             $blueprint->string('log_name')->nullable();
             $blueprint->text('description');
             $blueprint->nullableMorphs('subject', 'subject');
+            $blueprint->string('event')->nullable();
             $blueprint->nullableMorphs('causer', 'causer');
+            $blueprint->json('attribute_changes')->nullable();
             $blueprint->json('properties')->nullable();
-            $blueprint->uuid('batch_uuid')->nullable();
             $blueprint->timestamps();
 
             $blueprint->index('log_name');

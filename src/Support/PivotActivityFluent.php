@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use LogicException;
-use Spatie\Activitylog\ActivityLogger;
+use Spatie\Activitylog\Support\ActivityLogger;
 
 /**
  * Fluent API for pivot table activity logging.
