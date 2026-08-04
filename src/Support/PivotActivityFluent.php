@@ -67,8 +67,6 @@ class PivotActivityFluent
 
     /**
      * Set the user or model causing this activity.
-     *
-     * @return $this
      */
     public function by(?Model $model = null): static
     {
@@ -88,8 +86,6 @@ class PivotActivityFluent
 
     /**
      * Mark activity as anonymous (no causer).
-     *
-     * @return $this
      */
     public function byAnonymous(): static
     {
@@ -280,8 +276,6 @@ class PivotActivityFluent
 
     /**
      * Set a custom log message.
-     *
-     * @return $this
      */
     public function withMessage(string $message): static
     {
