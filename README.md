@@ -75,6 +75,24 @@ The activity log will record:
 
 ---
 
+## Upgrading to v3.0.0
+
+This release moves the underlying dependency to `spatie/laravel-activitylog` v5.
+
+Code impact on this package is minimal (an internal namespace move), but **spatie ships no
+automatic migration for existing installs** — only a fresh-install migration stub. If your
+application already has an `activity_log` table in production, you must write and run your own
+migration before deploying this version:
+
+- add `attribute_changes` (json, nullable) and `event` (string, nullable)
+- backfill `attribute_changes` from the existing `properties` data as needed
+- drop `batch_uuid` (the batch system was removed in v5)
+
+See [spatie/laravel-activitylog's upgrade guide][activitylog-upgrading] for the full column
+mapping. Do this migration before bumping this package past `^2.0` in your `composer.json`.
+
+---
+
 ## Development
 
 ```bash
@@ -127,3 +145,4 @@ Contributions are welcome. Please read [CONTRIBUTING.md][contributing] for the p
 [pint]: https://laravel.com/docs/pint
 [ecosystem]: https://gitlab.com/zairakai
 [contributing]: ./CONTRIBUTING.md
+[activitylog-upgrading]: https://github.com/spatie/laravel-activitylog/blob/main/UPGRADING.md
