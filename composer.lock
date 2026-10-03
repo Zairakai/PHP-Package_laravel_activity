@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "6a1c1a3847219a9804669268c42c342a",
+    "content-hash": "1935782e01028cc904dea5e2db6edf7f",
     "packages": [
         {
             "name": "brick/math",
@@ -12397,16 +12397,16 @@
         },
         {
             "name": "zairakai/laravel-dev-tools",
-            "version": "v2.2.0",
+            "version": "3.0.0",
             "source": {
                 "type": "git",
                 "url": "https://gitlab.com/zairakai/php-packages/laravel-dev-tools.git",
-                "reference": "279c097572e97742c73c7fa31c6aeda4b25fb9a3"
+                "reference": "ea051da134044d228f90924f99c00cacd6e0f2f9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://gitlab.com/api/v4/projects/zairakai%2Fphp-packages%2Flaravel-dev-tools/repository/archive.zip?sha=279c097572e97742c73c7fa31c6aeda4b25fb9a3",
-                "reference": "279c097572e97742c73c7fa31c6aeda4b25fb9a3",
+                "url": "https://gitlab.com/api/v4/projects/zairakai%2Fphp-packages%2Flaravel-dev-tools/repository/archive.zip?sha=ea051da134044d228f90924f99c00cacd6e0f2f9",
+                "reference": "ea051da134044d228f90924f99c00cacd6e0f2f9",
                 "shasum": ""
             },
             "require": {
@@ -12508,7 +12508,7 @@
                     "type": "patreon"
                 }
             ],
-            "time": "2026-08-15T11:09:57+00:00"
+            "time": "2026-10-04T00:10:51+00:00"
         }
     ],
     "aliases": [],
