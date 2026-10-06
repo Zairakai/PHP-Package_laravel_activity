@@ -6,6 +6,7 @@
 
 [![GitLab Release][gitlab-release-badge]][gitlab-release]
 [![Packagist][packagist-badge]][packagist]
+[![Docs][docs-badge]][docs]
 [![Downloads][downloads-badge]][packagist]
 [![License][license-badge]][license]
 
@@ -15,6 +16,8 @@
 [![Code Style][pint-badge]][pint]
 
 Pivot activity logging for Eloquent many-to-many relationships, built on top of [Spatie Laravel Activity Log](https://github.com/spatie/laravel-activitylog).
+
+**Documentation: [laravel-activity-a54436.gitlab.io][docs]**
 
 ---
 
@@ -146,3 +149,5 @@ Contributions are welcome. Please read [CONTRIBUTING.md][contributing] for the p
 [ecosystem]: https://gitlab.com/zairakai
 [contributing]: ./CONTRIBUTING.md
 [activitylog-upgrading]: https://github.com/spatie/laravel-activitylog/blob/main/UPGRADING.md
+[docs]: https://laravel-activity-a54436.gitlab.io
+[docs-badge]: https://img.shields.io/badge/docs-online-blue
