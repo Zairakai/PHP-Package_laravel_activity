@@ -41,3 +41,6 @@ Thumbs.db
 
 # Dev Tools - Published configs (optional, uncomment to ignore)
 # config/dev-tools/
+
+/public/
+.npm/
