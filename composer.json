@@ -44,17 +44,10 @@
         "spatie/laravel-activitylog": "^5.0"
     },
     "require-dev": {
-        "driftingly/rector-laravel": "^2.1",
         "ergebnis/composer-normalize": "^2.49",
-        "larastan/larastan": "^3.9",
-        "laravel/pint": "^1.27",
-        "nunomaduro/phpinsights": "^2.13",
         "orchestra/testbench": "^10.0 || ^11.0",
-        "phpmetrics/phpmetrics": "^2.9",
-        "phpstan/phpstan": "^2.1",
         "phpunit/phpunit": "^12.0",
-        "rector/rector": "^2.3",
-        "zairakai/laravel-dev-tools": "^3.0"
+        "zairakai/laravel-dev-tools": "^4.0"
     },
     "suggest": {
         "ergebnis/composer-normalize": "Automated composer.json normalization"
