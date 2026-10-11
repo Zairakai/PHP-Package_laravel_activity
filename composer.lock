@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "386d3b3a23389e98539329176a18d427",
+    "content-hash": "dbe344c645feb11d1933c03b7aa8ebed",
     "packages": [
         {
             "name": "brick/math",
@@ -11598,29 +11598,29 @@
         },
         {
             "name": "stanislas-poisson/php-dev-tools",
-            "version": "1.0.1",
+            "version": "1.1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Stanislas-Poisson/php-dev-tools.git",
-                "reference": "f7b5ed9846b6472008ef9057b18ed917fe9ebdbd"
+                "reference": "671a0b49d16183de66f13cb286bdecda45e23211"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Stanislas-Poisson/php-dev-tools/zipball/f7b5ed9846b6472008ef9057b18ed917fe9ebdbd",
-                "reference": "f7b5ed9846b6472008ef9057b18ed917fe9ebdbd",
+                "url": "https://api.github.com/repos/Stanislas-Poisson/php-dev-tools/zipball/671a0b49d16183de66f13cb286bdecda45e23211",
+                "reference": "671a0b49d16183de66f13cb286bdecda45e23211",
                 "shasum": ""
             },
             "require": {
-                "laravel/pint": "^1.13",
+                "laravel/pint": "^1.32.1",
                 "nunomaduro/phpinsights": "^2.12",
                 "php": ">=8.3",
-                "phpstan/phpstan": "^2.1",
-                "phpstan/phpstan-phpunit": "^2.0",
-                "phpstan/phpstan-strict-rules": "^2.0",
-                "rector/rector": "^2.0"
+                "phpstan/phpstan": "^2.3.1",
+                "phpstan/phpstan-phpunit": "^2.1.1",
+                "phpstan/phpstan-strict-rules": "^2.1",
+                "rector/rector": "^2.7"
             },
             "require-dev": {
-                "phpunit/phpunit": "^11.5"
+                "phpunit/phpunit": "^12.5.38"
             },
             "bin": [
                 "bin/php-dev-tools"
@@ -11690,7 +11690,7 @@
                     "type": "patreon"
                 }
             ],
-            "time": "2026-10-06T11:49:36+00:00"
+            "time": "2026-10-10T20:22:26+00:00"
         },
         {
             "name": "symfony/cache",
@@ -12749,16 +12749,16 @@
         },
         {
             "name": "zairakai/laravel-dev-tools",
-            "version": "4.0.0",
+            "version": "4.1.0",
             "source": {
                 "type": "git",
                 "url": "https://gitlab.com/zairakai/php-packages/laravel-dev-tools.git",
-                "reference": "34b56f1a4260be1e028b200fde3e38cf11055d41"
+                "reference": "cf63625b565428a907731ed4641af17a9c603b31"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://gitlab.com/api/v4/projects/zairakai%2Fphp-packages%2Flaravel-dev-tools/repository/archive.zip?sha=34b56f1a4260be1e028b200fde3e38cf11055d41",
-                "reference": "34b56f1a4260be1e028b200fde3e38cf11055d41",
+                "url": "https://gitlab.com/api/v4/projects/zairakai%2Fphp-packages%2Flaravel-dev-tools/repository/archive.zip?sha=cf63625b565428a907731ed4641af17a9c603b31",
+                "reference": "cf63625b565428a907731ed4641af17a9c603b31",
                 "shasum": ""
             },
             "require": {
@@ -12783,6 +12783,9 @@
                 "enlightn/enlightn": "Security and performance analysis (Laravel apps only)",
                 "ergebnis/composer-normalize": "Automated composer.json normalization"
             },
+            "bin": [
+                "bin/update-dependencies"
+            ],
             "type": "composer-plugin",
             "extra": {
                 "class": "Zairakai\\LaravelDevTools\\Composer\\DevToolsPlugin",
@@ -12857,7 +12860,7 @@
                     "type": "patreon"
                 }
             ],
-            "time": "2026-10-10T07:43:48+00:00"
+            "time": "2026-10-11T13:21:17+00:00"
         }
     ],
     "aliases": [],
