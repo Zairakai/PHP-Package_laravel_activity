@@ -1,0 +1,6 @@
+{
+  "tag": {
+    "when": "runtime",
+    "level": "patch"
+  }
+}
