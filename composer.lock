@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "733e6001305ae297768651c2c1cd10f5",
+    "content-hash": "08bc1c23c4e7ced38434ed54dd4c8ef7",
     "packages": [
         {
             "name": "brick/math",
@@ -12849,22 +12849,22 @@
         },
         {
             "name": "zairakai/laravel-dev-tools",
-            "version": "4.3.2",
+            "version": "4.4.0",
             "source": {
                 "type": "git",
                 "url": "https://gitlab.com/zairakai/php-packages/laravel-dev-tools.git",
-                "reference": "c3d011c3d7e11d3ea632b0bbba0076c993cb20ec"
+                "reference": "bbfa06f31acbb7e57a3180649948a6a4d0838564"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://gitlab.com/api/v4/projects/zairakai%2Fphp-packages%2Flaravel-dev-tools/repository/archive.zip?sha=c3d011c3d7e11d3ea632b0bbba0076c993cb20ec",
-                "reference": "c3d011c3d7e11d3ea632b0bbba0076c993cb20ec",
+                "url": "https://gitlab.com/api/v4/projects/zairakai%2Fphp-packages%2Flaravel-dev-tools/repository/archive.zip?sha=bbfa06f31acbb7e57a3180649948a6a4d0838564",
+                "reference": "bbfa06f31acbb7e57a3180649948a6a4d0838564",
                 "shasum": ""
             },
             "require": {
                 "composer-plugin-api": "^2.0",
-                "driftingly/rector-laravel": "^2.6.2",
-                "larastan/larastan": "^3.13",
+                "driftingly/rector-laravel": "^2.7.0",
+                "larastan/larastan": "^3.13.2",
                 "php": "^8.4",
                 "phpmetrics/phpmetrics": "^2.11",
                 "stanislas-poisson/php-dev-tools": "^1.1.1"
@@ -12960,7 +12960,7 @@
                     "type": "patreon"
                 }
             ],
-            "time": "2026-10-24T16:22:58+00:00"
+            "time": "2026-10-24T19:49:46+00:00"
         }
     ],
     "aliases": [],
