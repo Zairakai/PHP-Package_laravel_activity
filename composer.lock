@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "176a43b362be4b5528db24e13146dfa9",
+    "content-hash": "5877e4f72430b4168fce4cfb81c684ed",
     "packages": [
         {
             "name": "brick/math",
@@ -10511,21 +10511,21 @@
         },
         {
             "name": "rector/rector",
-            "version": "2.7.0",
+            "version": "2.8.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/rectorphp/rector.git",
-                "reference": "4d6a39b7fff302cac0ce90cd959a53c2f6a32776"
+                "reference": "8548f15ee64457a39d5eb6b1cdf268ff05e7fbdf"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/rectorphp/rector/zipball/4d6a39b7fff302cac0ce90cd959a53c2f6a32776",
-                "reference": "4d6a39b7fff302cac0ce90cd959a53c2f6a32776",
+                "url": "https://api.github.com/repos/rectorphp/rector/zipball/8548f15ee64457a39d5eb6b1cdf268ff05e7fbdf",
+                "reference": "8548f15ee64457a39d5eb6b1cdf268ff05e7fbdf",
                 "shasum": ""
             },
             "require": {
                 "php": "^7.4|^8.0",
-                "phpstan/phpstan": "^2.3.0"
+                "phpstan/phpstan": "^2.3.2"
             },
             "conflict": {
                 "rector/rector-doctrine": "*",
@@ -10556,7 +10556,7 @@
             ],
             "support": {
                 "issues": "https://github.com/rectorphp/rector/issues",
-                "source": "https://github.com/rectorphp/rector/tree/2.7.0"
+                "source": "https://github.com/rectorphp/rector/tree/2.8.0"
             },
             "funding": [
                 {
@@ -10564,7 +10564,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-10-06T08:46:45+00:00"
+            "time": "2026-10-26T12:10:55+00:00"
         },
         {
             "name": "sebastian/cli-parser",
@@ -12849,16 +12849,16 @@
         },
         {
             "name": "zairakai/laravel-dev-tools",
-            "version": "4.7.0",
+            "version": "4.8.0",
             "source": {
                 "type": "git",
                 "url": "https://gitlab.com/zairakai/php-packages/laravel-dev-tools.git",
-                "reference": "e2b6514576ec6cc1616ceaf92190d6cddbc9e5ff"
+                "reference": "acf531572bf4871ba2efaf2d2918565a411a1812"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://gitlab.com/api/v4/projects/zairakai%2Fphp-packages%2Flaravel-dev-tools/repository/archive.zip?sha=e2b6514576ec6cc1616ceaf92190d6cddbc9e5ff",
-                "reference": "e2b6514576ec6cc1616ceaf92190d6cddbc9e5ff",
+                "url": "https://gitlab.com/api/v4/projects/zairakai%2Fphp-packages%2Flaravel-dev-tools/repository/archive.zip?sha=acf531572bf4871ba2efaf2d2918565a411a1812",
+                "reference": "acf531572bf4871ba2efaf2d2918565a411a1812",
                 "shasum": ""
             },
             "require": {
@@ -12961,7 +12961,7 @@
                     "type": "patreon"
                 }
             ],
-            "time": "2026-10-26T12:21:17+00:00"
+            "time": "2026-10-26T13:16:07+00:00"
         }
     ],
     "aliases": [],
