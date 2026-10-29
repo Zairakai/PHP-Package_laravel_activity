@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "35c2e79530318c413e56bfcac5491afa",
+    "content-hash": "9c922587324df9dcc1e91d67f9f72e25",
     "packages": [
         {
             "name": "brick/math",
@@ -12852,21 +12852,21 @@
         },
         {
             "name": "zairakai/laravel-dev-tools",
-            "version": "4.9.1",
+            "version": "4.10.0",
             "source": {
                 "type": "git",
                 "url": "https://gitlab.com/zairakai/php-packages/laravel-dev-tools.git",
-                "reference": "fb30c125a03e0933ba70c03d371b9e0c85a3e520"
+                "reference": "25f1e9fe381baf072a699c6c5dc3ac2bed891549"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://gitlab.com/api/v4/projects/zairakai%2Fphp-packages%2Flaravel-dev-tools/repository/archive.zip?sha=fb30c125a03e0933ba70c03d371b9e0c85a3e520",
-                "reference": "fb30c125a03e0933ba70c03d371b9e0c85a3e520",
+                "url": "https://gitlab.com/api/v4/projects/zairakai%2Fphp-packages%2Flaravel-dev-tools/repository/archive.zip?sha=25f1e9fe381baf072a699c6c5dc3ac2bed891549",
+                "reference": "25f1e9fe381baf072a699c6c5dc3ac2bed891549",
                 "shasum": ""
             },
             "require": {
                 "composer-plugin-api": "^2.0",
-                "composer/semver": "^3.5.2",
+                "composer/semver": "^3.6.0",
                 "driftingly/rector-laravel": "^2.7.1",
                 "larastan/larastan": "^3.13.2",
                 "php": "^8.4",
@@ -12874,14 +12874,14 @@
                 "stanislas-poisson/php-dev-tools": "^1.1.2"
             },
             "require-dev": {
-                "composer/composer": "^2.10.3",
+                "composer/composer": "^2.11.0",
                 "ergebnis/composer-normalize": "^2.54",
                 "illuminate/console": "^12.0 || ^13.0",
                 "illuminate/database": "^12.0 || ^13.0",
                 "illuminate/filesystem": "^12.0 || ^13.0",
                 "illuminate/support": "^12.0 || ^13.0",
                 "orchestra/testbench": "^10.0 || ^11.3",
-                "phpunit/phpunit": "^12.5.40"
+                "phpunit/phpunit": "^12.5.42"
             },
             "suggest": {
                 "enlightn/enlightn": "Security and performance analysis (Laravel apps only)",
@@ -12964,7 +12964,7 @@
                     "type": "patreon"
                 }
             ],
-            "time": "2026-10-29T10:29:48+00:00"
+            "time": "2026-10-29T10:58:46+00:00"
         }
     ],
     "aliases": [],
