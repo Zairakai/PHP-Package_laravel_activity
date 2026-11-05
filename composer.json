@@ -44,9 +44,9 @@
         "spatie/laravel-activitylog": "^5.1.3"
     },
     "require-dev": {
-        "ergebnis/composer-normalize": "^2.54",
+        "ergebnis/composer-normalize": "^2.56",
         "orchestra/testbench": "^10.0 || ^11.3",
-        "phpunit/phpunit": "^12.5.42",
+        "phpunit/phpunit": "^12.5.43",
         "zairakai/laravel-dev-tools": "^4.10.0"
     },
     "suggest": {
