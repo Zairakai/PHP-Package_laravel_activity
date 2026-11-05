@@ -47,7 +47,7 @@
         "ergebnis/composer-normalize": "^2.56",
         "orchestra/testbench": "^10.0 || ^11.3",
         "phpunit/phpunit": "^12.5.43",
-        "zairakai/laravel-dev-tools": "^4.10.0"
+        "zairakai/laravel-dev-tools": "^4.11.0"
     },
     "suggest": {
         "ergebnis/composer-normalize": "Automated composer.json normalization"
