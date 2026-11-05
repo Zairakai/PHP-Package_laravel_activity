@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "261acbacfd9db1875bfbb3aeaef4a80b",
+    "content-hash": "79c7e0b0b9566c68e46b977fc5c91524",
     "packages": [
         {
             "name": "brick/math",
@@ -12877,36 +12877,36 @@
         },
         {
             "name": "zairakai/laravel-dev-tools",
-            "version": "4.10.0",
+            "version": "4.11.0",
             "source": {
                 "type": "git",
                 "url": "https://gitlab.com/zairakai/php-packages/laravel-dev-tools.git",
-                "reference": "25f1e9fe381baf072a699c6c5dc3ac2bed891549"
+                "reference": "212f2fd70c49d2da5c0a013faa5febda0273a558"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://gitlab.com/api/v4/projects/zairakai%2Fphp-packages%2Flaravel-dev-tools/repository/archive.zip?sha=25f1e9fe381baf072a699c6c5dc3ac2bed891549",
-                "reference": "25f1e9fe381baf072a699c6c5dc3ac2bed891549",
+                "url": "https://gitlab.com/api/v4/projects/zairakai%2Fphp-packages%2Flaravel-dev-tools/repository/archive.zip?sha=212f2fd70c49d2da5c0a013faa5febda0273a558",
+                "reference": "212f2fd70c49d2da5c0a013faa5febda0273a558",
                 "shasum": ""
             },
             "require": {
                 "composer-plugin-api": "^2.0",
                 "composer/semver": "^3.6.0",
                 "driftingly/rector-laravel": "^2.7.1",
-                "larastan/larastan": "^3.13.2",
+                "larastan/larastan": "^3.14.0",
                 "php": "^8.4",
                 "phpmetrics/phpmetrics": "^2.11",
                 "stanislas-poisson/php-dev-tools": "^1.1.2"
             },
             "require-dev": {
-                "composer/composer": "^2.11.0",
-                "ergebnis/composer-normalize": "^2.54",
+                "composer/composer": "^2.11.1",
+                "ergebnis/composer-normalize": "^2.56",
                 "illuminate/console": "^12.0 || ^13.0",
                 "illuminate/database": "^12.0 || ^13.0",
                 "illuminate/filesystem": "^12.0 || ^13.0",
                 "illuminate/support": "^12.0 || ^13.0",
                 "orchestra/testbench": "^10.0 || ^11.3",
-                "phpunit/phpunit": "^12.5.42"
+                "phpunit/phpunit": "^12.5.43"
             },
             "suggest": {
                 "enlightn/enlightn": "Security and performance analysis (Laravel apps only)",
@@ -12989,7 +12989,7 @@
                     "type": "patreon"
                 }
             ],
-            "time": "2026-10-29T10:58:46+00:00"
+            "time": "2026-11-05T05:16:04+00:00"
         }
     ],
     "aliases": [],
