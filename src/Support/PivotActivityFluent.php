@@ -4,25 +4,39 @@ declare(strict_types=1);
 
 namespace Zairakai\LaravelActivity\Support;
 
-use Illuminate\Contracts\Auth\Authenticatable;
+use Closure;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Auth;
-use LogicException;
+use Illuminate\Support\Traits\Conditionable;
 use Spatie\Activitylog\Support\ActivityLogger;
+use Spatie\Activitylog\Support\ActivityLogStatus;
 
 /**
  * Fluent API for pivot table activity logging.
+ *
+ * The pivot table has no model, so its history only exists here: each entry keeps the rows of the pivot table before
+ * and after the operation, for the related models that changed, in the attribute_changes of Spatie (old and
+ * attributes, as for a model), with the type of the related model in the properties. The operation is the event
+ * of the entry. The sensitive columns (PivotColumns) are never written.
  *
  * @template TRelatedModel of Model
  * @template TParentModel of Model
  */
 class PivotActivityFluent
 {
-    protected ?Model $causedBy = null;
+    use Conditionable;
+
+    protected Model|int|string|null $causedBy = null;
+
+    /**
+     * @var array<int, string>
+     */
+    protected array $hiddenColumns = [];
 
     protected ?string $logMessage = null;
+
+    protected ?string $logName = null;
 
     protected bool $useAnonymousCauser = false;
 
@@ -34,52 +48,44 @@ class PivotActivityFluent
     /**
      * Attach models to the pivot table with activity logging.
      *
-     * @param array<int|string>|Collection<int, Model>|Model|int|string $ids
-     * @param array<string, mixed>                                      $attributes
+     * The IDs that are already attached are skipped. The IDs can carry their own pivot attributes, as in Laravel:
+     * [1 => ['role' => 'a'], 2 => []].
+     *
+     * @param array<int|string, mixed>|Collection<int, Model>|Model|int|string $ids
+     * @param array<string, mixed>                                             $attributes
      */
     public function attach(mixed $ids, array $attributes = [], bool $touch = true): void
     {
-        $beforeIds   = $this->getCurrentPivotIds();
-        $idsToAttach = $this->normalizeIds($ids);
+        $this->atomic(function () use ($ids, $attributes, $touch): void {
+            $records = PivotIdNormalizer::records($ids);
+            $keys    = array_keys($records);
+            $before  = $this->snapshot($keys);
+            $new     = array_diff_key($records, $before);
 
-        // Only attach new IDs
-        $newIds = array_diff($idsToAttach, $beforeIds);
+            if ([] === $new) {
+                return;
+            }
 
-        if ([] === $newIds) {
-            return;
-        }
+            $this->relation->attach($new, $attributes, $touch);
 
-        $this->relation->attach($newIds, $attributes, $touch);
-
-        $afterIds = $this->getCurrentPivotIds();
-
-        $this->logActivity(
-            operation: 'attached',
-            before: $beforeIds,
-            after: $afterIds,
-            defaultMessage: sprintf(
-                'Attached %d %s',
-                count($newIds),
-                str($this->relation->getRelationName())->singular()->lower(),
-            ),
-        );
+            $this->record(
+                'attached',
+                $before,
+                sprintf('Attached %d %s', count($new), $this->singular()),
+                $keys,
+            );
+        });
     }
 
     /**
-     * Set the user or model causing this activity.
+     * Set the causer of this activity, as Spatie does: a model, or the ID of one.
+     *
+     * Without a causer (or with null), Spatie decides: the authenticated user of its default_auth_driver.
      */
-    public function by(?Model $model = null): static
+    public function by(Model|int|string|null $modelOrId = null): static
     {
-        if ($model instanceof Model) {
-            $this->causedBy = $model;
-
-            return $this;
-        }
-
-        /** @var (Authenticatable&Model)|null $authenticatedUser */
-        $authenticatedUser = Auth::user();
-
-        $this->causedBy = $authenticatedUser;
+        $this->causedBy           = $modelOrId;
+        $this->useAnonymousCauser = false;
 
         return $this;
     }
@@ -96,113 +102,127 @@ class PivotActivityFluent
     }
 
     /**
+     * Same as by(), under the name of Spatie.
+     */
+    public function causedBy(Model|int|string|null $modelOrId): static
+    {
+        return $this->by($modelOrId);
+    }
+
+    /**
+     * Same as byAnonymous(), under the name of Spatie.
+     */
+    public function causedByAnonymous(): static
+    {
+        return $this->byAnonymous();
+    }
+
+    /**
      * Detach models from the pivot table with activity logging.
      *
-     * @param array<int|string>|Collection<int, Model>|Model|int|string|null $ids   IDs to detach, or null to detach all
-     * @param bool                                                           $touch Whether to touch parent timestamps
+     * @param array<int|string, mixed>|Collection<int, Model>|Model|int|string|null $ids   IDs to detach, or null to detach all
+     * @param bool                                                                  $touch Whether to touch parent timestamps
      *
      * @return int Number of detached records
      */
     public function detach(mixed $ids = null, bool $touch = true): int
     {
-        $beforeIds = $this->getCurrentPivotIds();
+        return $this->atomic(function () use ($ids, $touch): int {
+            $scope = null;
 
-        $idsToDetach = null === $ids ? $beforeIds : array_intersect($this->normalizeIds($ids), $beforeIds);
+            if (null !== $ids) {
+                $scope = PivotIdNormalizer::normalize($ids);
+            }
 
-        if ([] === $idsToDetach) {
-            return 0;
-        }
+            $before   = $this->snapshot($scope);
+            $toDetach = array_keys($before);
 
-        $count = $this->relation->detach($idsToDetach, $touch);
+            if ([] === $toDetach) {
+                return 0;
+            }
 
-        $afterIds = $this->getCurrentPivotIds();
+            $count = $this->relation->detach($toDetach, $touch);
 
-        $this->logActivity(
-            operation: 'detached',
-            before: $beforeIds,
-            after: $afterIds,
-            defaultMessage: sprintf(
-                'Detached %d %s',
-                $count,
-                str($this->relation->getRelationName())->singular()->lower(),
-            ),
-        );
+            $this->record(
+                'detached',
+                $before,
+                sprintf('Detached %d %s', $count, $this->singular()),
+                $scope,
+            );
 
-        return $count;
+            return $count;
+        });
+    }
+
+    /**
+     * Write the entries of this call in another log than the configured one.
+     */
+    public function inLog(string $logName): static
+    {
+        $this->logName = $logName;
+
+        return $this;
     }
 
     /**
      * Sync the pivot table with activity logging.
      *
-     * @param array<int|string>|Collection<int, Model>|Model $ids
+     * The IDs can carry their own pivot attributes, as in Laravel. Nothing is logged when nothing changed.
      *
-     * @return array<string, array<int, int|string>>
+     * @param array<int|string, mixed>|Collection<int, Model>|Model $ids
+     *
+     * @return array{attached: array<int, int|string>, detached: array<int, int|string>, updated: array<int, int|string>}
      */
     public function sync(array|Collection|Model $ids, bool $detaching = true): array
     {
-        $beforeIds = $this->getCurrentPivotIds();
-        $newIds    = $this->normalizeIds($ids);
+        return $this->atomic(function () use ($ids, $detaching): array {
+            $scope = null;
 
-        // Check if anything actually changed
-        if (! $this->hasChanged($beforeIds, $newIds)) {
-            return ['attached' => [], 'detached' => [], 'updated' => []];
-        }
+            if (! $detaching) {
+                $scope = PivotIdNormalizer::normalize($ids);
+            }
 
-        /** @var array{attached: array<int, int|string>, detached: array<int, int|string>, updated: array<int, int|string>} $result */
-        $result   = $this->relation->sync($ids, $detaching);
-        $afterIds = $this->getCurrentPivotIds();
+            $before = $this->snapshot($scope);
 
-        $summary = PivotSyncSummary::fromResult($result);
+            /** @var array{attached: array<int, int|string>, detached: array<int, int|string>, updated: array<int, int|string>} $result */
+            $result = $this->relation->sync($ids, $detaching);
 
-        $this->logActivity(
-            operation: 'synced',
-            before: $beforeIds,
-            after: $afterIds,
-            defaultMessage: sprintf(
-                'Synced %s (%s)',
-                $this->relation->getRelationName(),
-                $summary,
-            ),
-        );
+            $this->record(
+                'synced',
+                $before,
+                sprintf('Synced %s (%s)', $this->relation->getRelationName(), PivotSyncSummary::fromResult($result)),
+                $scope,
+            );
 
-        return $result;
+            return $result;
+        });
     }
 
     /**
      * Sync without detaching with activity logging.
      *
-     * @param array<int|string>|Collection<int, Model>|Model $ids
+     * @param array<int|string, mixed>|Collection<int, Model>|Model $ids
      *
-     * @return array<string, array<int, int|string>>
+     * @return array{attached: array<int, int|string>, detached: array<int, int|string>, updated: array<int, int|string>}
      */
     public function syncWithoutDetaching(array|Collection|Model $ids): array
     {
-        $beforeIds = $this->getCurrentPivotIds();
-        $newIds    = $this->normalizeIds($ids);
+        return $this->atomic(function () use ($ids): array {
+            $scope  = PivotIdNormalizer::normalize($ids);
+            $before = $this->snapshot($scope);
 
-        // Only log new additions
-        $addedIds = array_diff($newIds, $beforeIds);
+            /** @var array{attached: array<int, int|string>, detached: array<int, int|string>, updated: array<int, int|string>} $result */
+            $result = $this->relation->syncWithoutDetaching($ids);
 
-        if ([] === $addedIds) {
-            return ['attached' => [], 'detached' => [], 'updated' => []];
-        }
+            $this->record(
+                'synced_without_detaching',
+                $before,
+                sprintf('Added %d %s without detaching', count($result['attached']), $this->singular()),
+                $scope,
+            );
 
-        /** @var array{attached: array<int, int|string>, detached: array<int, int|string>, updated: array<int, int|string>} $result */
-        $result   = $this->relation->syncWithoutDetaching($ids);
-        $afterIds = $this->getCurrentPivotIds();
-
-        $this->logActivity(
-            operation: 'synced_without_detaching',
-            before: $beforeIds,
-            after: $afterIds,
-            defaultMessage: sprintf(
-                'Added %d %s without detaching',
-                count($addedIds),
-                str($this->relation->getRelationName())->singular()->lower(),
-            ),
-        );
-
-        return $result;
+            return $result;
+        });
     }
 
     /**
@@ -210,35 +230,34 @@ class PivotActivityFluent
      *
      * Attaches IDs that are not present, detaches IDs that are.
      *
-     * @param array<int|string>|Collection<int, Model>|Model|int|string $ids   IDs to toggle
-     * @param bool                                                      $touch Whether to touch parent timestamps
+     * @param array<int|string, mixed>|Collection<int, Model>|Model|int|string $ids   IDs to toggle
+     * @param bool                                                             $touch Whether to touch parent timestamps
      *
-     * @return array<string, array<int, int|string>> Result with 'attached' and 'detached' keys
+     * @return array{attached: array<int, int|string>, detached: array<int, int|string>}
      */
     public function toggle(mixed $ids, bool $touch = true): array
     {
-        $beforeIds = $this->getCurrentPivotIds();
+        return $this->atomic(function () use ($ids, $touch): array {
+            $scope  = PivotIdNormalizer::normalize($ids);
+            $before = $this->snapshot($scope);
 
-        /** @var array{attached: array<int, int|string>, detached: array<int, int|string>} $result */
-        $result   = $this->relation->toggle($ids, $touch);
-        $afterIds = $this->getCurrentPivotIds();
+            /** @var array{attached: array<int, int|string>, detached: array<int, int|string>} $result */
+            $result = $this->relation->toggle($ids, $touch);
 
-        $attachedCount = count($result['attached']);
-        $detachedCount = count($result['detached']);
+            $this->record(
+                'toggled',
+                $before,
+                sprintf(
+                    'Toggled %s (attached %d, detached %d)',
+                    $this->relation->getRelationName(),
+                    count($result['attached']),
+                    count($result['detached']),
+                ),
+                $scope,
+            );
 
-        $this->logActivity(
-            operation: 'toggled',
-            before: $beforeIds,
-            after: $afterIds,
-            defaultMessage: sprintf(
-                'Toggled %s (attached %d, detached %d)',
-                $this->relation->getRelationName(),
-                $attachedCount,
-                $detachedCount,
-            ),
-        );
-
-        return $result;
+            return $result;
+        });
     }
 
     /**
@@ -249,29 +268,32 @@ class PivotActivityFluent
      */
     public function updateExistingPivot(array|int|string $ids, array $attributes, bool $touch = true): int
     {
-        $normalizedIds    = $this->normalizeIds($ids);
-        $beforeAttributes = $this->getPivotAttributes($normalizedIds);
+        return $this->atomic(function () use ($ids, $attributes, $touch): int {
+            $scope  = PivotIdNormalizer::normalize($ids);
+            $before = $this->snapshot($scope);
+            $count  = 0;
 
-        $count = 0;
+            foreach ($scope as $id) {
+                $count += $this->relation->updateExistingPivot($id, $attributes, $touch);
+            }
 
-        foreach ($normalizedIds as $normalizedId) {
-            $count += $this->relation->updateExistingPivot($normalizedId, $attributes, $touch);
-        }
+            $this->record(
+                'updated_pivot',
+                $before,
+                sprintf('Updated %d %s pivot attributes', $count, $this->singular()),
+                $scope,
+            );
 
-        $afterAttributes = $this->getPivotAttributes($normalizedIds);
+            return $count;
+        });
+    }
 
-        $this->logActivity(
-            operation: 'updated_pivot',
-            before: $beforeAttributes,
-            after: $afterAttributes,
-            defaultMessage: sprintf(
-                'Updated %d %s pivot attributes',
-                $count,
-                str($this->relation->getRelationName())->singular()->lower(),
-            ),
-        );
-
-        return $count;
+    /**
+     * Same as inLog(), under the name of Spatie.
+     */
+    public function useLog(string $logName): static
+    {
+        return $this->inLog($logName);
     }
 
     /**
@@ -285,107 +307,90 @@ class PivotActivityFluent
     }
 
     /**
-     * @return array<int, int|string>
+     * Leave columns of the pivot table out of the log, on top of the hidden ones of the configuration.
+     *
+     * @param array<int, string> $columns
      */
-    protected function getCurrentPivotIds(): array
+    public function withoutColumns(array $columns): static
     {
-        return $this->relation
-            ->get()
-            ->pluck($this->relation->getRelatedKeyName())
-            ->map(fn ($id): int|string => $this->extractKey($id))
-            ->values()
-            ->all();
+        $this->hiddenColumns = [...$this->hiddenColumns, ...$columns];
+
+        return $this;
     }
 
     /**
-     * @param array<int, int|string> $ids
+     * Run the operation and its log together: when the log cannot be written, the operation is rolled back.
+     *
+     * @template TReturn
+     *
+     * @param Closure(): TReturn $callback
+     *
+     * @return TReturn
+     */
+    protected function atomic(Closure $callback): mixed
+    {
+        try {
+            return $this->relation->getParent()->getConnection()->transaction($callback);
+        }
+        finally {
+            // The message is for one operation, logged or not: it must not leak into the next one
+            $this->logMessage = null;
+        }
+    }
+
+    /**
+     * Write the activity of an operation, from the rows of the pivot table before it and now.
+     *
+     * Nothing is written when no row changed.
+     *
+     * @param array<int|string, array<string, mixed>> $before
+     * @param array<int, int|string>|null             $ids    The related IDs the operation is about, all when null
+     */
+    protected function record(string $operation, array $before, string $defaultMessage, ?array $ids = null): void
+    {
+        // Spatie can be disabled (activitylog.enabled, withoutLogging): the operation runs, nothing is written
+        if (resolve(ActivityLogStatus::class)->disabled()) {
+            return;
+        }
+
+        $pivotDiff = new PivotDiff($before, $this->snapshot($ids));
+
+        if ($pivotDiff->isEmpty()) {
+            return;
+        }
+
+        $activityLogger = $this->logger()
+            ->performedOn($this->relation->getParent())
+            ->event($operation);
+
+        $this->applyCauser($activityLogger);
+
+        $activityLogger->withProperties([
+            'relation'     => $this->relation->getRelationName(),
+            'table'        => $this->relation->getTable(),
+            'related_type' => $this->relation->getRelated()->getMorphClass(),
+        ])
+            ->withChanges([
+                'old'        => $pivotDiff->old(),
+                'attributes' => $pivotDiff->new(),
+            ])
+            ->log($this->logMessage ?? $defaultMessage);
+    }
+
+    /**
+     * @param array<int, int|string>|null $ids
      *
      * @return array<int|string, array<string, mixed>>
      */
-    protected function getPivotAttributes(array $ids): array
+    protected function snapshot(?array $ids): array
     {
-        $attributes = [];
-        $keyName    = $this->relation->getRelatedKeyName();
-
-        /** @var Collection<int, Model> $models */
-        $models = $this->relation
-            ->whereIn($keyName, $ids)
-            ->get();
-
-        $models->each(function (Model $model) use ($keyName, &$attributes): void {
-            $modelKey = $model->{$keyName};
-            assert(is_int($modelKey) || is_string($modelKey));
-
-            $pivot                 = $model->pivot;
-            $attributes[$modelKey] = $pivot instanceof Model ? $pivot->getAttributes() : [];
-        });
-
-        return $attributes;
+        return PivotSnapshot::take($this->relation, PivotColumns::hidden($this->relation, $this->hiddenColumns), $ids);
     }
 
     /**
-     * @param array<int, int|string> $before
-     * @param array<int, int|string> $after
+     * Priority: anonymous flag, then the explicit causer, then the default of Spatie (the authenticated user).
      */
-    protected function hasChanged(array $before, array $after): bool
-    {
-        sort($before);
-        sort($after);
-
-        return $before !== $after;
-    }
-
-    /**
-     * Write an activity log entry for the current operation.
-     *
-     * Applies causer resolution, attaches before/after state as properties,
-     * and resets per-operation state (message, anonymous flag) after logging.
-     *
-     * @param string $operation      Operation name (attached, detached, synced, …)
-     * @param mixed  $before         State before the operation
-     * @param mixed  $after          State after the operation
-     * @param string $defaultMessage Fallback message when no custom message is set
-     */
-    protected function logActivity(
-        string $operation,
-        mixed $before,
-        mixed $after,
-        string $defaultMessage,
-    ): void {
-        $model = $this->relation->getParent();
-
-        $activityLogger = activity()
-            ->performedOn($model);
-
-        $this->applyCauser($activityLogger, $model);
-
-        $activityLogger->withProperties([
-            'operation'  => $operation,
-            'relation'   => $this->relation->getRelationName(),
-            'attributes' => $after,
-            'old'        => $before,
-        ])
-            ->log($this->logMessage ?? $defaultMessage);
-
-        // Reset state for next operation
-        $this->logMessage         = null;
-        $this->useAnonymousCauser = false;
-    }
-
-    /**
-     * @return array<int, int|string>
-     */
-    protected function normalizeIds(mixed $ids): array
-    {
-        return PivotIdNormalizer::normalize($ids);
-    }
-
-    /**
-     * Resolve and apply the causer to the activity logger.
-     *
-     * Priority: anonymous flag > explicit causedBy > parent model fallback.
-     */
-    private function applyCauser(ActivityLogger $activityLogger, Model $model): void
+    private function applyCauser(ActivityLogger $activityLogger): void
     {
         if ($this->useAnonymousCauser) {
             $activityLogger->causedByAnonymous();
@@ -393,24 +398,22 @@ class PivotActivityFluent
             return;
         }
 
-        $activityLogger->causedBy($this->causedBy ?? $model);
+        $activityLogger->causedBy($this->causedBy);
     }
 
-    /**
-     * Extract a scalar key from a value or Model instance.
-     *
-     * @throws LogicException When the resolved key is neither int nor string
-     */
-    private function extractKey(mixed $value): int|string
+    private function logger(): ActivityLogger
     {
-        $key = $value instanceof Model
-            ? $value->getKey()
-            : $value;
+        $logName = $this->logName ?? config('laravel-activity.log_name');
 
-        if (is_int($key) || is_string($key)) {
-            return $key;
+        if (is_string($logName)) {
+            return activity($logName);
         }
 
-        throw new LogicException('Pivot key must be int or string');
+        return activity();
+    }
+
+    private function singular(): string
+    {
+        return (string) str($this->relation->getRelationName())->singular()->lower();
     }
 }
