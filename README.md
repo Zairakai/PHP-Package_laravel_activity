@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="https://gitlab.com/zairakai/php-packages/laravel-activity/-/raw/main/assets/icon.png" alt="Laravel Activity" width="160">
+</p>
+
 # zairakai/laravel-activity
 
 [![Main][pipeline-main-badge]][pipeline-main-link]
@@ -15,7 +19,7 @@
 [![Static Analysis][phpstan-badge]][phpstan]
 [![Code Style][pint-badge]][pint]
 
-Pivot activity logging for Eloquent many-to-many relationships, built on top of [Spatie Laravel Activity Log](https://github.com/spatie/laravel-activitylog).
+Activity logs for the changes of Eloquent many-to-many relationships, built on [Spatie Laravel Activity Log](https://github.com/spatie/laravel-activitylog).
 
 **Documentation: [laravel-activity-a54436.gitlab.io][docs]**
 
@@ -23,88 +27,113 @@ Pivot activity logging for Eloquent many-to-many relationships, built on top of 
 
 ## Features
 
-- **Fluent API** — chainable `->activity()->by()->withMessage()->sync()` on any `BelongsToMany` relation
-- **Automatic diffing** — logs attached, detached, and unchanged IDs on every `sync` operation
-- **Actor tracking** — `->by($user)` records who performed the action
-- **Custom messages** — `->withMessage('Assigned roles')` for human-readable log entries
-- **Zero configuration** — no config file needed, just `composer require`
-
----
+- **History of the pivot table**: a pivot table has no model, so each entry keeps its rows before and after the change.
+- **Fluent API**: `->activity()` on a `BelongsToMany` or `MorphToMany` relation, then `attach`, `detach`, `sync`, `syncWithoutDetaching`, `toggle` or `updateExistingPivot`.
+- **Built on Spatie**: same causer, log name and enable switch, with the data in `attribute_changes`.
+- **Safe**: sensitive columns (`password`, `token`…) are never logged, and nothing is logged when nothing changes.
+- **`TraceActivities` trait**: the entries a model caused, the ones on it, and the ones where it is on the other side of a relation.
 
 ## Requirements
 
-- `spatie/laravel-activitylog` must be installed and configured
-
----
+PHP 8.4 or higher, Laravel 12 or 13, and `spatie/laravel-activitylog` 5 (installed with the package, with its `activity_log` table migrated: Spatie ships no migration for a table of an older version, see [its upgrade guide][activitylog-upgrading]).
 
 ## Install
 
 ```bash
 composer require zairakai/laravel-activity
+php artisan vendor:publish --tag=laravel-activity-config   # optional
 ```
 
----
+## Configuration
+
+The package has one optional config file, `config/laravel-activity.php`.
+
+| Key | Role |
+| --- | --- |
+| `log_name` | log of the entries (`pivot` by default, `ACTIVITY_PIVOT_LOG_NAME`), `null` for the default log of Spatie |
+| `hidden_columns` | columns of the pivot tables never written in the log (`password`, `remember_token`, `token`, `api_token`, `secret` by default) |
+| `use_pivot_hidden` | `true` by default (`ACTIVITY_PIVOT_USE_HIDDEN`): also leave out the `$hidden` of the pivot model (`->using(RoleUser::class)`) |
 
 ## Usage
 
 ```php
-use App\Models\User;
-
-$user = User::find(1);
-
-// Log a sync operation on a BelongsToMany relationship
 $user->roles()
     ->activity()
     ->by(auth()->user())
     ->withMessage('Assigned roles')
     ->sync([1, 2, 3]);
 
-// Without an actor
-$user->permissions()
-    ->activity()
-    ->withMessage('Permissions updated')
-    ->sync([10, 20]);
-
-// Attach and detach also fire activity
 $user->tags()->activity()->attach(5);
 $user->tags()->activity()->detach(5);
 ```
 
-The activity log will record:
+<details>
+<summary>What an entry contains</summary>
 
-- `attached`: IDs that were added
-- `detached`: IDs that were removed
-- `unchanged`: IDs that were already present
+One entry per operation. The subject is the parent model, the `event` is the operation (`attached`, `detached`, `synced`, `synced_without_detaching`, `toggled`, `updated_pivot`), the `properties` hold the relation, the pivot table and the type of the related model, and `attribute_changes` hold the pivot rows before (`old`) and after (`attributes`), by ID of the related model, only for the rows that changed. Detaching the role 3 from the user 1:
 
----
+```json
+{
+    "event": "detached",
+    "log_name": "pivot",
+    "description": "Detached 1 role",
+    "properties": {
+        "relation": "roles",
+        "table": "role_user",
+        "related_type": "App\\Models\\Role"
+    },
+    "attribute_changes": {
+        "old": { "3": { "user_id": 1, "role_id": 3, "granted_by": "System" } },
+        "attributes": []
+    }
+}
+```
 
-## Upgrading to v3.0.0
+An attached row is only in `attributes`, a detached one only in `old` (with all its columns, so it can be restored), a modified one in both.
 
-This release moves the underlying dependency to `spatie/laravel-activitylog` v5.
+</details>
 
-Code impact on this package is minimal (an internal namespace move), but **spatie ships no
-automatic migration for existing installs** — only a fresh-install migration stub. If your
-application already has an `activity_log` table in production, you must write and run your own
-migration before deploying this version:
+<details>
+<summary>Causer, message, log and columns</summary>
 
-- add `attribute_changes` (json, nullable) and `event` (string, nullable)
-- backfill `attribute_changes` from the existing `properties` data as needed
-- drop `batch_uuid` (the batch system was removed in v5)
+- `->by($model)`, `->by($id)` and `->byAnonymous()` work as in Spatie (`causedBy()` and `causedByAnonymous()` too). Without a causer, Spatie decides.
+- `->withMessage('…')` is for the next operation only.
+- `->inLog('audit')` writes the entries of the instance in another log.
+- `->withoutColumns(['granted_by'])` leaves more columns out of the rows.
+- When Spatie is disabled, the operation runs and nothing is written.
 
-See [spatie/laravel-activitylog's upgrade guide][activitylog-upgrading] for the full column
-mapping. Do this migration before bumping this package past `^2.0` in your `composer.json`.
+</details>
 
----
+<details>
+<summary>Query the entries of a model</summary>
+
+```php
+use Zairakai\LaravelActivity\Traits\TraceActivities;
+
+$user->activities()->on()->get();       // its relations changed
+$user->activities()->by()->get();       // caused by the user
+$user->activities()->all();             // both
+$role->activities()->related()->get();  // where the role was attached or detached, on any user
+```
+
+`related()` filters on the `log_name` (indexed) before it reads the JSON, so it does not find the entries written with `->inLog()` in another log. On a big table, an index on the JSON paths of your database helps.
+
+</details>
 
 ## Development
 
+See [CONTRIBUTING.md][contributing] for the workflow and the quality standards. `composer install` and `make install-hooks` set the package up.
+
 ```bash
-make quality        # pint + phpstan + rector + insights + markdownlint + shellcheck
-make quality-fast   # pint + phpstan + markdownlint
-make test           # phpunit / pest
+make quality        # Pint, PHPStan and Markdownlint (with the rest of the gate)
+make quality-fast   # Pint, PHPStan and Markdownlint
+make quality-fix    # every automatic fix
+make test           # PHPUnit
+make bats           # the structure tests of the repository
+make ci             # the whole gate: quality, tests and Bats
 ```
 
----
+The configuration of each tool is in `config/dev-tools/`, one file per setting. These files come from [laravel-dev-tools][dev-tools]: `make setup-check` tells which ones are late on the package (`make setup-update` publishes them again).
 
 ## Statistics
 
@@ -152,6 +181,7 @@ Contributions are welcome. Please read [CONTRIBUTING.md][contributing] for the p
 [pint]: https://laravel.com/docs/pint
 [ecosystem]: https://gitlab.com/zairakai
 [contributing]: ./CONTRIBUTING.md
+[dev-tools]: https://gitlab.com/zairakai/php-packages/laravel-dev-tools
 [activitylog-upgrading]: https://github.com/spatie/laravel-activitylog/blob/main/UPGRADING.md
 [docs]: https://laravel-activity-a54436.gitlab.io
 [docs-badge]: https://img.shields.io/badge/docs-online-blue

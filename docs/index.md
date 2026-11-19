@@ -2,7 +2,7 @@
 layout: home
 hero:
   name: "zairakai/laravel-activity"
-  tagline: Enhanced activity logging helpers for Spatie Laravel Activity Log with pivot table support
+  tagline: History of the pivot tables of Eloquent many-to-many relations, built on Spatie Laravel Activity Log
   actions:
     - theme: brand
       text: Get started

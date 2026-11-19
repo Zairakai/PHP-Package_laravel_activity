@@ -15,9 +15,16 @@ use Zairakai\LaravelActivity\Support\PivotIdNormalizer;
 final class PivotIdNormalizerTest extends TestCase
 {
     #[Test]
+    public function keeps_the_pivot_attributes_of_each_id(): void
+    {
+        self::assertSame([1 => [], 2 => ['by' => 'a']], PivotIdNormalizer::records([1, 2 => ['by' => 'a']]));
+        self::assertSame([1, 2], PivotIdNormalizer::normalize([1 => ['by' => 'a'], 2 => []]));
+    }
+
+    #[Test]
     public function normalizes_array(): void
     {
-        $this->assertSame([1, 2, 3], PivotIdNormalizer::normalize([1, 2, 3]));
+        self::assertSame([1, 2, 3], PivotIdNormalizer::normalize([1, 2, 3]));
     }
 
     #[Test]
@@ -27,24 +34,24 @@ final class PivotIdNormalizerTest extends TestCase
         {
             protected $guarded = [];
         };
-        $m1->id = 10;
+        $m1->forceFill(['id' => 10]);
 
         $m2 = new class extends Model
         {
             protected $guarded = [];
         };
-        $m2->id = 20;
+        $m2->forceFill(['id' => 20]);
 
         $collection = new Collection([$m1, $m2]);
 
-        $this->assertSame([10, 20], PivotIdNormalizer::normalize($collection));
+        self::assertSame([10, 20], PivotIdNormalizer::normalize($collection));
     }
 
     #[Test]
     public function normalizes_scalar(): void
     {
-        $this->assertSame([5], PivotIdNormalizer::normalize(5));
-        $this->assertSame(['abc'], PivotIdNormalizer::normalize('abc'));
+        self::assertSame([5], PivotIdNormalizer::normalize(5));
+        self::assertSame(['abc'], PivotIdNormalizer::normalize('abc'));
     }
 
     #[Test]

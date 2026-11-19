@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512">
+<defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#1E293B"/><stop offset="1" stop-color="#0B1020"/></linearGradient></defs>
+<path d="M512,104C512,46.601 465.399,0 408,0L104,0C46.601,0 0,46.601 0,104L0,408C0,465.399 46.601,512 104,512L408,512C465.399,512 512,465.399 512,408L512,104Z" fill="url(#g)"/>
+<g fill="none" stroke="#F8FAFC" stroke-width="22" stroke-linecap="round" stroke-linejoin="round">
+<circle cx="176" cy="120" r="30"/>
+<circle cx="176" cy="320" r="30"/>
+<path d="M176,162L176,278"/>
+<path d="M176,250Q176,200 226,200L286,200Q336,200 336,150L336,120"/>
+</g>
+<circle cx="336" cy="120" r="34" fill="#FF2D20"/>
+<circle cx="116" cy="420" r="20" fill="#F05340"/>
+<circle cx="186" cy="420" r="20" fill="#2563A8"/>
+<circle cx="256" cy="420" r="20" fill="#3E9B53"/>
+<circle cx="326" cy="420" r="20" fill="#6D4AC4"/>
+<circle cx="396" cy="420" r="20" fill="#0F766E"/>
+</svg>
