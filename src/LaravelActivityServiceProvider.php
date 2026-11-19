@@ -24,6 +24,12 @@ class LaravelActivityServiceProvider extends ServiceProvider
     public function boot(): void
     {
         $this->registerPivotActivityMacro();
+
+        if ($this->app->runningInConsole()) {
+            $this->publishes([
+                __DIR__ . '/../config/laravel-activity.php' => config_path('laravel-activity.php'),
+            ], ['laravel-activity', 'laravel-activity-config']);
+        }
     }
 
     /**
@@ -31,7 +37,7 @@ class LaravelActivityServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        // No services to register for this traits-only package
+        $this->mergeConfigFrom(__DIR__ . '/../config/laravel-activity.php', 'laravel-activity');
     }
 
     /**

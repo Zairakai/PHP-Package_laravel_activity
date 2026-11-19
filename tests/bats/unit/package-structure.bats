@@ -151,12 +151,14 @@ teardown() {
 # Configuration Files Tests
 # ============================================================================
 
-@test "phpunit.xml exists" {
-    assert_file_exists "${PROJECT_ROOT}/phpunit.xml"
+@test "phpunit.xml is in config/dev-tools only" {
+    assert_file_exists "${PROJECT_ROOT}/config/dev-tools/phpunit.xml"
+    [ ! -e "${PROJECT_ROOT}/phpunit.xml" ]
 }
 
-@test "phpstan.neon exists" {
-    assert_file_exists "${PROJECT_ROOT}/phpstan.neon"
+@test "phpstan.neon is in config/dev-tools only" {
+    assert_file_exists "${PROJECT_ROOT}/config/dev-tools/phpstan.neon"
+    [ ! -e "${PROJECT_ROOT}/phpstan.neon" ]
 }
 
 

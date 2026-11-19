@@ -91,7 +91,7 @@ teardown() {
 # ============================================================================
 
 @test "phpunit can list available test suites" {
-    run "${VENDOR_BIN}/phpunit" --list-suites
+    run "${VENDOR_BIN}/phpunit" --configuration "${PROJECT_ROOT}/config/dev-tools/phpunit.xml" --list-suites
     assert_success
     assert_output_contains "Unit"
     assert_output_contains "Feature"
@@ -123,10 +123,10 @@ teardown() {
 # Configuration Files Installation Tests
 # ============================================================================
 
-@test "phpunit.xml is a regular file (not symlink)" {
+@test "config/dev-tools/phpunit.xml is a regular file (not symlink)" {
     # phpunit.xml must be copied, not symlinked (XML relative paths issue)
-    [ -f "${PROJECT_ROOT}/phpunit.xml" ]
-    [ ! -L "${PROJECT_ROOT}/phpunit.xml" ]
+    [ -f "${PROJECT_ROOT}/config/dev-tools/phpunit.xml" ]
+    [ ! -L "${PROJECT_ROOT}/config/dev-tools/phpunit.xml" ]
 }
 
 @test "Makefile is accessible" {
@@ -144,8 +144,13 @@ teardown() {
     assert_dir_exists "${PROJECT_ROOT}/.git"
 }
 
-@test "git hooks directory exists" {
-    assert_dir_exists "${PROJECT_ROOT}/.git/hooks"
+@test "the git hooks of laravel-dev-tools are active" {
+    # The hooks are a setting of the clone of a developer: a checkout of the pipeline has none
+    [ -z "${CI:-}" ] || skip "the hooks are a local setting"
+
+    run git -C "${PROJECT_ROOT}" config core.hooksPath
+    assert_success
+    [ "$output" = "vendor/zairakai/laravel-dev-tools/stubs/githooks" ]
 }
 
 # ============================================================================

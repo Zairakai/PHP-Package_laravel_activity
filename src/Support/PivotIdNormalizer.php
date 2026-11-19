@@ -19,23 +19,46 @@ final class PivotIdNormalizer
     /**
      * Normalize any ID input into a flat scalar array.
      *
-     * @param array<int|string>|Collection<int, Model>|Model|int|string $ids
+     * @param array<int|string, mixed>|Collection<int, Model>|Model|int|string $ids
      *
      * @return array<int, int|string>
      */
     public static function normalize(mixed $ids): array
     {
-        $collection = match (true) {
-            $ids instanceof Collection => $ids,
-            $ids instanceof Model      => collect([$ids->getKey()]),
-            is_array($ids)             => collect($ids),
-            default                    => collect([$ids]),
+        return array_keys(self::records($ids));
+    }
+
+    /**
+     * The IDs with their pivot attributes, as Laravel reads them: [1, 2] or [1 => ['role' => 'a'], 2 => []].
+     *
+     * @param array<int|string, mixed>|Collection<int, Model>|Model|int|string $ids
+     *
+     * @return array<int|string, array<string, mixed>>
+     */
+    public static function records(mixed $ids): array
+    {
+        $items = match (true) {
+            $ids instanceof Collection => $ids->all(),
+            is_array($ids)             => $ids,
+            default                    => [$ids],
         };
 
-        return $collection
-            ->map(fn ($id): int|string => self::extractKey($id))
-            ->values()
-            ->all();
+        $records = [];
+
+        foreach ($items as $key => $value) {
+            if (is_array($value)) {
+                /** @var array<string, mixed> $attributes */
+                $attributes = $value;
+
+                $records[self::extractKey($key)] = $attributes;
+
+                continue;
+            }
+
+            $records[self::extractKey($value)] = [];
+        }
+
+        return $records;
     }
 
     /**
@@ -43,7 +66,11 @@ final class PivotIdNormalizer
      */
     private static function extractKey(mixed $value): int|string
     {
-        $key = $value instanceof Model ? $value->getKey() : $value;
+        $key = $value;
+
+        if ($value instanceof Model) {
+            $key = $value->getKey();
+        }
 
         if (is_int($key) || is_string($key)) {
             return $key;

@@ -15,7 +15,7 @@ final class PivotSyncSummaryTest extends TestCase
     {
         $result = ['attached' => [], 'detached' => [], 'updated' => []];
 
-        $this->assertSame('', PivotSyncSummary::fromResult($result));
+        self::assertSame('', PivotSyncSummary::fromResult($result));
     }
 
     #[Test]
@@ -23,7 +23,7 @@ final class PivotSyncSummaryTest extends TestCase
     {
         $result = ['attached' => [1, 2], 'detached' => [3], 'updated' => [4, 5, 6]];
 
-        $this->assertSame(
+        self::assertSame(
             'attached 2, detached 1, updated 3',
             PivotSyncSummary::fromResult($result),
         );
@@ -34,7 +34,7 @@ final class PivotSyncSummaryTest extends TestCase
     {
         $result = ['attached' => [], 'detached' => [3], 'updated' => []];
 
-        $this->assertSame(
+        self::assertSame(
             'detached 1',
             PivotSyncSummary::fromResult($result),
         );
