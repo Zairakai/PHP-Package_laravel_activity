@@ -1,46 +1,85 @@
-# ======================
-# DEPENDENCIES
-# ======================
+# JetBrains (PhpStorm, WebStorm)
+# ----------------
+.idea/
+.idea_modules/
+*.iml
+*.ipr
+*.iws
+
+# Visual Studio Code and derivatives
+# ----------------
+.vscode/
+.history/
+
+# Other editors
+# ----------------
+.fleet/
+.zed/
+.vs/
+*.sublime-project
+*.sublime-workspace
+.project
+.classpath
+.settings/
+nbproject/
+*.swp
+*.swo
+*~
+
+# AI assistants
+# ----------------
+# Personal instruction files: not published (the KB repositories force them with exceptions)
+AGENTS.md
+CLAUDE.md
+GEMINI.md
+*.local.md
+.claude/settings.local.json
+.aider*
+.cursor/
+.windsurf/
+.continue/
+.codex/
+.gemini/
+
+# Editor and IDE files of the project
+# ----------------
+.phpstorm.meta.php
+.phpactor.json
+
+# Dependencies
+# ----------------
 /vendor
 /node_modules
 
-# ======================
-# BUILD & ARTIFACTS
-# ======================
+# Build output
+# ----------------
 /build
-/storage
 
-# ======================
-# TEST / CACHE
-# ======================
+# Laravel runtime
+# ----------------
+/storage
+/public/
+
+# Tests and coverage
+# ----------------
 .phpunit.cache
 .phpunit.result.cache
 /coverage
 
-# ======================
-# IDE / EDITORS
-# ======================
-.idea/
-.vscode/
-.phpstorm.meta.php
-.phpactor.json
+# Caches
+# ----------------
+.npm/
 
-# ======================
-# OS FILES
-# ======================
+# Logs
+# ----------------
+*.log
+
+# Operating system
+# ----------------
 .DS_Store
 Thumbs.db
 
-# ======================
-# TEMP / LOGS
-# ======================
-*.log
-
-# Dev Tools - Generated temporary files
+# Dev Tools temporary files
+# ----------------
 .*.tmp.*
-
-# Dev Tools - Published configs (optional, uncomment to ignore)
-# config/dev-tools/
-
-/public/
-.npm/
+.dev-tools-backup/
