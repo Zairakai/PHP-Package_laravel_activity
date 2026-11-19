@@ -26,7 +26,7 @@ const project = 'https://gitlab.com/zairakai/php-packages/laravel-activity'
 // DOCS_BASE is the folder of this build (/1.0.0/) and DOCS_ROOT the root of the site (/).
 export default defineConfig({
   title: 'zairakai/laravel-activity',
-  description: 'Enhanced activity logging helpers for Spatie Laravel Activity Log with pivot table support',
+  description: 'History of the pivot tables of Eloquent many-to-many relations, built on Spatie Laravel Activity Log',
   base: process.env.DOCS_BASE ?? '/',
   cleanUrls: true,
   lastUpdated: true,
